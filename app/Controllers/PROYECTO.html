@@ -1,0 +1,882 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Registro e Inicio de Sesión | Impulso Joven</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Inter', Arial, sans-serif;
+    background-color: #e9eaf0;
+    background-image:
+        linear-gradient(#dfe1e9 1px, transparent 1px),
+        linear-gradient(90deg, #dfe1e9 1px, transparent 1px);
+    background-size: 28px 28px;
+    color: #383731;
+    min-height: 100vh;
+    padding: 24px 16px;
+}
+
+.contenedor {
+    width: min(100%, 920px);
+    margin: 0 auto;
+    background: #fff;
+    border: 1px solid #dedfe5;
+    padding: 36px 38px;
+    min-height: 650px;
+}
+
+.encabezado {
+    margin-bottom: 34px;
+}
+
+.encabezado h1 {
+    font-size: clamp(23px, 3vw, 30px);
+    letter-spacing: -.7px;
+    margin-bottom: 5px;
+}
+
+.encabezado p {
+    font-size: 14px;
+    color: #77736d;
+}
+
+/* Selector de pantallas */
+
+.pestanas {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 7px;
+    margin-bottom: 10px;
+}
+
+.pestana {
+    border: 0;
+    background: #f3f2ef;
+    color: #696760;
+    padding: 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 12px;
+}
+
+.pestana.activa {
+    color: white;
+    background: #3260b2;
+}
+
+/* Columnas */
+
+.columnas {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    align-items: stretch;
+}
+
+.panel {
+    padding: 20px;
+    border-radius: 10px;
+    background: #faf9f6;
+}
+
+.panel h2 {
+    font-size: 15px;
+    margin-bottom: 19px;
+}
+
+.panel-login {
+    background: #edf3ff;
+}
+
+.panel-login h2 {
+    color: #2456b4;
+}
+
+.etiqueta {
+    display: block;
+    font-size: 11px;
+    color: #77736d;
+    margin-bottom: 8px;
+}
+
+.tipos {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 9px;
+    margin-bottom: 17px;
+}
+
+.tipo {
+    background: #fff;
+    border: 1px solid #e4e3df;
+    border-radius: 7px;
+    min-height: 49px;
+    padding: 8px 5px;
+    font-family: inherit;
+    font-size: 11px;
+    cursor: pointer;
+    color: #514f49;
+}
+
+.tipo.seleccionado {
+    background: #edf3ff;
+    border: 1px solid #3264bd;
+    color: #2858a9;
+    box-shadow: inset 0 0 0 1px #3264bd20;
+}
+
+.campo {
+    margin-bottom: 14px;
+}
+
+.campo label {
+    display: block;
+    color: #77736d;
+    font-size: 11px;
+    margin-bottom: 7px;
+}
+
+.campo input {
+    width: 100%;
+    height: 38px;
+    padding: 9px 11px;
+    border: 1px solid #e9e8e5;
+    border-radius: 5px;
+    background: white;
+    font-family: inherit;
+    font-size: 12px;
+    outline: none;
+}
+
+.campo input:focus {
+    border-color: #3264bd;
+    box-shadow: 0 0 0 3px #3264bd15;
+}
+
+.terminos {
+    display: flex;
+    align-items: flex-start;
+    gap: 7px;
+    color: #77736d;
+    font-size: 10px;
+    line-height: 1.5;
+    margin: 6px 0 17px;
+}
+
+.terminos input {
+    margin-top: 2px;
+    accent-color: #3264bd;
+}
+
+.terminos a,
+.olvido,
+.alternativa a {
+    color: #3264bd;
+    text-decoration: none;
+}
+
+.boton {
+    width: 100%;
+    padding: 12px;
+    border: 0;
+    border-radius: 25px;
+    background: #3260b2;
+    color: white;
+    font-family: inherit;
+    font-size: 12px;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.boton:hover {
+    background: #244b91;
+}
+
+.alternativa {
+    font-size: 10px;
+    color: #77736d;
+    text-align: center;
+    margin-top: 17px;
+}
+
+/* Inicio de sesión */
+
+.olvido {
+    display: inline-block;
+    font-size: 10px;
+    margin-top: -4px;
+    margin-bottom: 22px;
+}
+
+.oculto {
+    display: none;
+}
+
+.mensaje {
+    display: none;
+    margin-top: 12px;
+    padding: 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    line-height: 1.5;
+    background: #fff;
+    color: #2858a9;
+}
+
+.mensaje.visible {
+    display: block;
+}
+
+/* Información de usuarios */
+
+.informacion {
+    margin-top: 16px;
+}
+
+.informacion h3 {
+    font-size: 12px;
+    margin-bottom: 13px;
+}
+
+.informacion ul {
+    list-style: none;
+}
+
+.informacion li {
+    font-size: 11px;
+    line-height: 1.8;
+    color: #66635d;
+    margin-bottom: 4px;
+}
+
+.informacion li span {
+    margin-right: 5px;
+}
+
+@media (max-width: 680px) {
+    .contenedor {
+        padding: 25px 18px;
+    }
+
+    .columnas {
+        grid-template-columns: 1fr;
+    }
+
+    .encabezado {
+        margin-bottom: 25px;
+    }
+
+    .panel {
+        padding: 20px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<main class="contenedor">
+
+    <header class="encabezado">
+        <h1>02 · Registro e Inicio de Sesión</h1>
+        <p>Autenticación por tipo de usuario</p>
+    </header>
+
+    <div class="pestanas">
+        <button class="pestana activa" id="tabRegistro"
+                type="button" onclick="mostrarPanel('registro')">
+            Registrarse
+        </button>
+
+        <button class="pestana" id="tabLogin"
+                type="button" onclick="mostrarPanel('login')">
+            Iniciar sesión
+        </button>
+    </div>
+
+    <div class="columnas">
+
+        <!-- REGISTRO -->
+
+        <section class="panel" id="panelRegistro">
+            <h2>Crear cuenta</h2>
+
+            <form id="formRegistro">
+
+                <span class="etiqueta">Tipo de usuario</span>
+
+                <div class="tipos">
+                    <button type="button" class="tipo seleccionado"
+                            data-tipo="Joven" onclick="elegirTipo(this)">
+                        👤 Joven
+                    </button>
+
+                    <button type="button" class="tipo"
+                            data-tipo="Institución Educativa"
+                            onclick="elegirTipo(this)">
+                        🏫 Institución Educativa
+                    </button>
+
+                    <button type="button" class="tipo"
+                            data-tipo="Organización"
+                            onclick="elegirTipo(this)">
+                        🏢 Organización
+                    </button>
+
+                    <button type="button" class="tipo"
+                            data-tipo="Administrador"
+                            onclick="elegirTipo(this)">
+                        ⚙ Administrador
+                    </button>
+                </div>
+
+                <input type="hidden" id="tipoUsuario" value="Joven">
+
+                <div class="campo">
+                    <label for="nombre">Nombre completo</label>
+                    <input id="nombre" name="nombre"
+                           type="text" autocomplete="name"
+                           placeholder="Tu nombre completo" required>
+                </div>
+
+                <div class="campo">
+                    <label for="correoRegistro">Correo electrónico</label>
+                    <input id="correoRegistro" name="correo"
+                           type="email" autocomplete="email"
+                           placeholder="correo@ejemplo.com" required>
+                </div>
+
+                <div class="campo">
+                    <label for="claveRegistro">Contraseña</label>
+                    <input id="claveRegistro" name="clave"
+                           type="password" minlength="8"
+                           autocomplete="new-password"
+                           placeholder="Mínimo 8 caracteres" required>
+                </div>
+
+                <div class="campo">
+                    <label for="confirmar">Confirmar contraseña</label>
+                    <input id="confirmar" name="confirmar"
+                           type="password" minlength="8"
+                           autocomplete="new-password"
+                           placeholder="Repite tu contraseña" required>
+                </div>
+
+                <label class="terminos">
+                    <input type="checkbox" id="aceptar" required>
+                    <span>Acepto los <a href="#terminos">términos y condiciones</a>.</span>
+                </label>
+
+                <button type="submit" class="boton">
+                    Crear cuenta
+                </button>
+
+                <div class="alternativa">
+                    Al continuar con Google o Facebook, aceptas las condiciones.
+                </div>
+
+                <div class="mensaje" id="mensajeRegistro" role="status"></div>
+
+            </form>
+        </section>
+
+        <!-- INICIO DE SESIÓN -->
+
+        <section class="panel panel-login" id="panelLogin">
+            <h2>Iniciar sesión</h2>
+
+            <form id="formLogin">
+
+                <div class="campo">
+                    <label for="correoLogin">Correo electrónico</label>
+                    <input id="correoLogin" name="correo"
+                           type="email" autocomplete="email"
+                           placeholder="Tu correo electrónico" required>
+                </div>
+
+                <div class="campo">
+                    <label for="claveLogin">Contraseña</label>
+                    <input id="claveLogin" name="clave"
+                           type="password" autocomplete="current-password"
+                           placeholder="Tu contraseña" required>
+                </div>
+
+                <a href="#" class="olvido" id="recuperar">
+                    ¿Olvidaste tu contraseña?
+                </a>
+
+                <button type="submit" class="boton">
+                    Entrar
+                </button>
+
+                <div class="alternativa">
+                    ¿No tienes cuenta?
+                    <a href="#registro" onclick="mostrarPanel('registro')">
+                        Regístrate
+                    </a>
+                </div>
+
+                <div class="mensaje" id="mensajeLogin" role="status"></div>
+
+            </form>
+        </section>
+
+    </div>
+
+    <section class="panel informacion">
+        <h3>4 tipos de usuario</h3>
+
+        <ul>
+            <li><span>👤</span> Joven — accede a oportunidades.</li>
+            <li><span>🏫</span> Institución — publica cursos.</li>
+            <li><span>🏢</span> Organización — ofertas y becas.</li>
+            <li><span>⚙</span> Administrador — gestiona la plataforma.</li>
+        </ul>
+    </section>
+
+</main>
+
+<script>
+function mostrarPanel(panel) {
+    const registro = document.getElementById('panelRegistro');
+    const login = document.getElementById('panelLogin');
+    const tabRegistro = document.getElementById('tabRegistro');
+    const tabLogin = document.getElementById('tabLogin');
+
+    if (panel === 'registro') {
+        registro.classList.remove('oculto');
+        login.classList.remove('oculto');
+        tabRegistro.classList.add('activa');
+        tabLogin.classList.remove('activa');
+
+        document.getElementById('nombre').focus();
+    } else {
+        registro.classList.add('oculto');
+        login.classList.remove('oculto');
+        tabLogin.classList.add('activa');
+        tabRegistro.classList.remove('activa');
+
+        document.getElementById('correoLogin').focus();
+    }
+}
+
+function elegirTipo(boton) {
+    document.querySelectorAll('.tipo').forEach(function(tipo) {
+        tipo.classList.remove('seleccionado');
+    });
+
+    boton.classList.add('seleccionado');
+    document.getElementById('tipoUsuario').value = boton.dataset.tipo;
+}
+
+document.getElementById('formRegistro').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const clave = document.getElementById('claveRegistro').value;
+    const confirmar = document.getElementById('confirmar').value;
+    const mensaje = document.getElementById('mensajeRegistro');
+
+    mensaje.classList.add('visible');
+
+    if (clave !== confirmar) {
+        mensaje.textContent = 'Las contraseñas no coinciden.';
+        return;
+    }
+
+    mensaje.textContent =
+        'Formulario validado. Para crear tu cuenta necesitas conectar la plataforma a un servidor.';
+});
+
+document.getElementById('formLogin').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const mensaje = document.getElementById('mensajeLogin');
+    mensaje.textContent =
+        'El formulario está completo, pero debes conectar un sistema de autenticación para iniciar sesión.';
+    mensaje.classList.add('visible');
+});
+
+document.getElementById('recuperar').addEventListener('click', function(e) {
+    e.preventDefault();
+
+    const mensaje = document.getElementById('mensajeLogin');
+    mensaje.textContent =
+        'La recuperación de contraseña estará disponible cuando conectes el sistema de usuarios.';
+    mensaje.classList.add('visible');
+});
+</script>
+
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plataforma Jóvenes</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            color: #383731;
+            background-color: #e9eaf0;
+            background-image:
+                linear-gradient(#dfe1e9 1px, transparent 1px),
+                linear-gradient(90deg, #dfe1e9 1px, transparent 1px);
+            background-size: 30px 30px;
+            padding: 20px;
+        }
+
+        .pagina {
+            background: #ffffff;
+            width: 100%;
+            max-width: 540px;
+            min-height: 735px;
+            margin: 0 auto;
+            padding: 36px 37px 42px;
+            border: 1px solid #dedede;
+        }
+
+        .encabezado {
+            margin-bottom: 36px;
+        }
+
+        .encabezado h1 {
+            font-size: 25px;
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+
+        .encabezado p {
+            font-size: 14px;
+            color: #77736d;
+        }
+
+        /* Menú de navegación */
+
+        nav {
+            background: #f4f3f1;
+            border-radius: 7px;
+            padding: 12px 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 14px;
+            font-size: 8px;
+        }
+
+        nav a {
+            color: #46433d;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        nav a:hover {
+            color: #3264bd;
+        }
+
+        .logo {
+            font-weight: bold;
+        }
+
+        /* Sección principal */
+
+        .hero {
+            background: #faf9f6;
+            border-radius: 9px;
+            padding: 23px 20px;
+            margin-bottom: 20px;
+        }
+
+        .hero h2 {
+            font-size: 23px;
+            margin-bottom: 15px;
+        }
+
+        .hero p {
+            color: #77736d;
+            font-size: 10px;
+            line-height: 1.6;
+            margin-bottom: 17px;
+        }
+
+        .botones {
+            display: flex;
+            gap: 8px;
+        }
+
+        .boton {
+            display: inline-block;
+            text-decoration: none;
+            font-size: 9px;
+            padding: 8px 14px;
+            border-radius: 25px;
+            border: 1px solid #3264bd;
+            color: #3264bd;
+            background: white;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .boton-principal {
+            background: #3264bd;
+            color: white;
+        }
+
+        .boton:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 3px 8px #00000015;
+        }
+
+        /* Tarjetas destacadas */
+
+        .secciones h3 {
+            font-size: 13px;
+            margin-bottom: 16px;
+        }
+
+        .tarjetas {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+            margin-bottom: 19px;
+        }
+
+        .tarjeta {
+            min-height: 77px;
+            padding: 12px 7px;
+            border-radius: 8px;
+            background: #faf9f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-size: 9px;
+            line-height: 1.5;
+            text-decoration: none;
+            color: #48453f;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .tarjeta:nth-child(odd),
+        .tarjeta:nth-child(5) {
+            background: #edf3ff;
+        }
+
+        .tarjeta strong {
+            color: #3264bd;
+            font-weight: 400;
+        }
+
+        .tarjeta:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px #00000012;
+        }
+
+        /* Estadísticas */
+
+        .estadisticas {
+            background: #36352f;
+            color: white;
+            border-radius: 8px;
+            padding: 13px 8px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            text-align: center;
+            margin-bottom: 19px;
+        }
+
+        .estadistica h3 {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .estadistica p {
+            font-size: 8px;
+            color: #e2e0dc;
+        }
+
+        /* Pie de página */
+
+        footer {
+            background: #f4f3f1;
+            min-height: 70px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 15px;
+            color: #77736d;
+            font-size: 8px;
+            line-height: 1.8;
+        }
+
+        footer a {
+            color: #77736d;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            color: #3264bd;
+        }
+
+        /* Adaptación para celulares */
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
+            .pagina {
+                padding: 25px 18px;
+            }
+
+            .encabezado h1 {
+                font-size: 21px;
+            }
+
+            nav {
+                font-size: 10px;
+            }
+
+            .hero h2 {
+                font-size: 21px;
+            }
+
+            .tarjetas {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .tarjeta {
+                min-height: 85px;
+                font-size: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="pagina">
+
+        <header class="encabezado">
+            <h1>01 · Inicio / Landing</h1>
+            <p>Página principal pública</p>
+        </header>
+
+        <nav>
+            <a href="#inicio" class="logo">LOGO</a>
+            <a href="#empleo">Inicio · Empleo · Eventos · Becas · Cursos · Emprendimiento</a>
+            <a href="#inicio">Iniciar sesión</a>
+            <a href="#registro">[Registro]</a>
+        </nav>
+
+        <section class="hero" id="inicio">
+            <h2>Tu futuro empieza aquí</h2>
+
+            <p>
+                Empleo, becas, cursos, eventos y más para jóvenes.<br>
+                Todo en un solo lugar.
+            </p>
+
+            <div class="botones">
+                <a href="#registro" class="boton boton-principal">
+                    Comenzar ahora
+                </a>
+
+                <a href="#secciones" class="boton">
+                    Explorar
+                </a>
+            </div>
+        </section>
+
+        <section class="secciones" id="secciones">
+            <h3>Secciones destacadas</h3>
+
+            <div class="tarjetas">
+
+                <a href="#empleo" class="tarjeta" id="empleo">
+                    💼 &nbsp; <span><strong>EMPLEO</strong><br>
+                    Ofertas laborales y prácticas</span>
+                </a>
+
+                <a href="#eventos" class="tarjeta" id="eventos">
+                    🌐 &nbsp; <span>EVENTOS DEPORTIVOS<br>
+                    Torneos y actividades</span>
+                </a>
+
+                <a href="#becas" class="tarjeta" id="becas">
+                    🎓 &nbsp; <span><strong>BECAS</strong><br>
+                    Convocatorias abiertas</span>
+                </a>
+
+                <a href="#cursos" class="tarjeta" id="cursos">
+                    📚 &nbsp; <span>CURSOS<br>
+                    Gratuitos con certificación</span>
+                </a>
+
+                <a href="#emprendimiento" class="tarjeta" id="emprendimiento">
+                    🚀 &nbsp; <span><strong>EMPRENDIMIENTO</strong><br>
+                    Recursos e innovación</span>
+                </a>
+
+                <a href="#retos" class="tarjeta" id="retos">
+                    🏆 &nbsp; <span>RETOS Y LOGROS<br>
+                    Gamificación y ranking</span>
+                </a>
+
+            </div>
+        </section>
+
+        <section class="estadisticas">
+            <div class="estadistica">
+                <h3>+10k</h3>
+                <p>jóvenes activos</p>
+            </div>
+
+            <div class="estadistica">
+                <h3>+500</h3>
+                <p>oportunidades</p>
+            </div>
+
+            <div class="estadistica">
+                <h3>+200</h3>
+                <p>aliados</p>
+            </div>
+        </section>
+
+        <footer id="registro">
+            <p>
+                © Plataforma Jóvenes ·
+                <a href="mailto:contacto@plataformajovenes.com">Contacto</a>
+                · <a href="#terminos">Términos</a>
+                · <a href="#privacidad">Privacidad</a>
+                · <a href="#redes">Redes sociales</a>
+            </p>
+        </footer>
+
+    </main>
+
+</body>
+</html>
